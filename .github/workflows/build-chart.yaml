@@ -6,7 +6,7 @@ on:
   push:
     paths:
       - base/**
-      - .github/workflow/build-chart.yaml
+      - .github/workflows/build-chart.yaml
       - bin/chart-build.sh
 
 jobs:
