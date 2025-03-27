@@ -21,6 +21,7 @@ jobs:
 
       - name: Build/Push chart
         run: |
-          whoami
+          export HOME=/root # stupid github action container changing home
+
           cd base
           ../bin/chart-build.sh
