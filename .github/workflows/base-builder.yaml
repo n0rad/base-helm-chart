@@ -6,6 +6,7 @@ on:
   push:
     paths:
       - docker/base-builder/**
+      - .github/workflows/base-builder.yaml
 
 jobs:
   builder:
