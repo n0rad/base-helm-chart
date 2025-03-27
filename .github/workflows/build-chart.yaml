@@ -6,11 +6,13 @@ on:
   push:
     paths:
       - base/**
+      - .github/workflow/build-chart.yaml
+      - bin/chart-build.sh
 
 jobs:
   push:
     runs-on: ubuntu-latest
-    container: ghcr.io/n0rad/base-builder:latest
+    container: ghcr.io/n0rad/base-builder:1.250327.1105-H81dd083
 
     steps:
       - uses: actions/checkout@v4
