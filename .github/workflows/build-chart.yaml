@@ -15,8 +15,11 @@ jobs:
     container: ghcr.io/n0rad/base-builder:latest
     permissions:
       packages: write
+      contents: write
+
     env:
       HOME: /root # stupid github action container changing home
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
         with:
