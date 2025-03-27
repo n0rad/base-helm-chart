@@ -34,4 +34,4 @@ jobs:
             export PUSH=true
           fi
           cd base
-          ../bin/chart-build.sh
+          PUSH=true ../bin/chart-build.sh
