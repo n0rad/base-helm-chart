@@ -95,12 +95,15 @@ if [ "$PUSH" == true ]; then
 	version="1.$(date -u '+%y%m%d').$(date -u '+%H%M' | awk '{print $0+0}')-H$(git rev-parse --short HEAD)"
 	HELM_PACKAGE_ARGS="--version=$version"
 
+	echo_purple "Packaging $name-$version"
 	helm package $chartPath $HELM_PACKAGE_ARGS -d /tmp
+	echo_purple "Pushing $name-$version"
 	helm push "/tmp/$name-$version.tgz" "$REGISTRY_URL"
 
 	if is_library_chart "$chartPath"; then
-    echo_purple "packaging $name$CHART_TEMPLATE_SUFFIX-$version"
+    echo_purple "Packaging $name$CHART_TEMPLATE_SUFFIX-$version"
     helm package "$CHART_TEMPLATE_PATH" $HELM_PACKAGE_ARGS -d /tmp
+    echo_purple "Pushing $name$CHART_TEMPLATE_SUFFIX-$version"
     helm push "/tmp/$name$CHART_TEMPLATE_SUFFIX-$version.tgz" "$REGISTRY_URL"
 	fi
 fi

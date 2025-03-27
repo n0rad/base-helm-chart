@@ -36,5 +36,4 @@ jobs:
           if [ "$branch" == "main" ]; then
             export PUSH=true
           fi
-          cd base
-          PUSH=true bash -x ../bin/chart-build.sh
+          PUSH=true bash -x ../bin/chart-build.sh base
