@@ -140,6 +140,6 @@ if [ "$PUSH" == true ]; then
 	fi
 
 	tag="$name-$version"
-	gh release create "$tag"
+	gh release create "$tag" --generate-notes
 	gh release upload "$tag" "/tmp/$name-$version.tgz" $CHART_PATH/values.schema.json
 fi
