@@ -131,15 +131,12 @@ spec:
       annotations:
         checksum/configMaps: afdf20f511621d5cb358c5e8b0da2d14cdbe2549fb12fa123f6a6e9baabef26e
         cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
-        sidecar.istio.io/proxyCPU: 100m
-        sidecar.istio.io/proxyCPULimit: "1"
-        sidecar.istio.io/proxyMemory: 200Mi
-        sidecar.istio.io/proxyMemoryLimit: 1Gi
       labels:
         app: release-name
         app.kubernetes.io/component: main
         app.kubernetes.io/instance: release-name
         app.kubernetes.io/name: release-name
+        sidecar.istio.io/inject: "false"
         tags.datadoghq.com/service: release-name
         tags.datadoghq.com/version: "31"
     spec:
@@ -431,31 +428,3 @@ spec:
           averageUtilization: 70
           type: Utilization
       type: Resource
----
-# Source: base-template/templates/base.yaml
-apiVersion: networking.istio.io/v1
-kind: Sidecar
-metadata:
-  name: release-name
-  labels:
-    app: release-name
-    app.kubernetes.io/component: main
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: release-name
-    helm.sh/chart: base-template-0.0.0
-    istio.io/tag: stable
-    tags.datadoghq.com/service: release-name
-    tags.datadoghq.com/version: "31"
-spec:
-  workloadSelector:
-    labels:
-      app.kubernetes.io/component: main
-      app.kubernetes.io/instance: release-name
-      app.kubernetes.io/name: release-name
-  outboundTrafficPolicy:
-    mode: "REGISTRY_ONLY"
-  egress:
-    - hosts:
-      - istio-system/metadata.google.internal
-      - istio-system/metadata.google.internal.

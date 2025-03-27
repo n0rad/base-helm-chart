@@ -5,6 +5,8 @@ values:
   - ../../../tests/overallValues.yaml
 tests:
   - it: create a sidecar
+    set:
+      workloads.main.istio.enabled: true
     documentSelector:
       path: kind
       value: Sidecar
@@ -52,6 +54,8 @@ tests:
             - '*/mydependency.mydependencynamespace'
 
   - it: blackhole policy is default
+    set:
+      workloads.main.istio.enabled: true
     documentSelector:
       path: kind
       value: Sidecar
