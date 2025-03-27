@@ -12,7 +12,7 @@ on:
 jobs:
   push:
     runs-on: ubuntu-latest
-    container: ghcr.io/n0rad/base-builder:1.250327.1105-H81dd083
+    container: ghcr.io/n0rad/base-builder:latest
 
     steps:
       - uses: actions/checkout@v4
