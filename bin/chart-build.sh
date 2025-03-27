@@ -41,15 +41,6 @@ update_dependencies() {
   helm dependency update "$1"
 }
 
-getBaseDependencyNameAndVersion() {
-		for i in $(yq '.dependencies[]? | .name + ";" + .version + ";" + .repository' Chart.yaml); do
-			IFS=';' read -ra depAttributes <<< "$i"
-			if [[ ${depAttributes[0]} =~ ^base* ]] && [[ ${depAttributes[2]} == "$REGISTRY_URL" ]]; then
-				echo "${depAttributes[0]}" "${depAttributes[1]}"
-				return
-			fi
-		done
-}
 
 ####################
 
@@ -96,13 +87,19 @@ fi
 
 # Schema
 echo_purple "Preparing schema"
-read baseName baseVersion < <(getBaseDependencyNameAndVersion) || true
+for i in $(yq '.dependencies[]? | .name + ";" + .version + ";" + .repository' "$CHART_PATH/Chart.yaml"); do
+	IFS=';' read -ra depAttributes <<< "$i"
+	if [[ ${depAttributes[0]} =~ ^base* ]] && [[ ${depAttributes[2]} == "$REGISTRY_URL" ]]; then
+		baseName="${depAttributes[0]}"
+		baseVersion="${depAttributes[1]}"
+	fi
+done
 if [ ! -f "$CHART_PATH/schema/root.schema.json" ] && [ -n "$baseName" ]; then
 	# using base chart without declaring a schema, creating one inheriting directly
 	cp "$scriptDir/lib/helm/values.schema.json" "$CHART_PATH"
 fi
 
-if [ -f "./schema/root.schema.json" ]; then
+if [ -f "$CHART_PATH/schema/root.schema.json" ]; then
 	echo_blue "Dereference schema and merge allOf"
 	if [ ! -d $scriptDir/lib/helm/dereferencer/node_modules ]; then
 		(
@@ -111,7 +108,8 @@ if [ -f "./schema/root.schema.json" ]; then
 			npm install
 		)
 	fi
-	node $scriptDir/lib/helm/dereferencer/dereferenceAndMerge.js
+
+	(cd $CHART_PATH && node $scriptDir/lib/helm/dereferencer/dereferenceAndMerge.js)
 
 	echo_blue "Replacing JSON schema placeholders"
 	chartName="$name"
