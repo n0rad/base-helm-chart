@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: Base
+
+on:
+  push:
+    paths:
+      - base/**
+      - .github/workflows/build-chart.yaml
+      - bin/chart-build.sh
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    container: ghcr.io/n0rad/base-builder:latest
+    permissions:
+      packages: write
+    env:
+      HOME: /root # stupid github action container changing home
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Login to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build/Push chart
+        run: |
+          git config --global --add safe.directory /__w/base-helm-chart/base-helm-chart
+
+          if [ "$branch" == "main" ]; then
+            export PUSH=true
+          fi
+          bin/chart-build.sh base
