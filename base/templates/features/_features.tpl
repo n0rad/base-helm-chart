@@ -12,12 +12,8 @@
   {{- end }}
 
   {{- include "base.features.environment" (dict "rootContext" $) -}}
-  {{- include "base.lib.utils.mergeInValuesNonOverwrite" (dict "rootContext" $ "obj" (include "base.features.teamShortname" $ | fromYaml)) }}
   {{- include "base.features.mainWorkload" $ -}}
   {{- include "base.features.workloads" (dict "rootContext" $) -}}
-
-  {{/* e2eTests must be run after workloads, so the main container docker image version is set */}}
-  {{- include "base.lib.utils.mergeInValuesNonOverwrite" (dict "rootContext" $ "obj" (include "base.features.e2eTests" $ | fromYaml)) }}
 
   {{- include "base.lib.utils.mergeInValuesNonOverwrite" (dict "rootContext" $ "obj"  (include "base.features.istio" $ | fromYaml)) -}}
 

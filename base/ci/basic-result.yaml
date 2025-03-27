@@ -13,7 +13,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "31"
-    team: ep
 spec:
   maxUnavailable: 10%
   selector:
@@ -36,7 +35,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "31"
-    team: ep
 secrets:
   - name: release-name-sa-token
 ---
@@ -55,7 +53,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "31"
-    team: ep
   annotations:
     kubernetes.io/service-account.name: release-name
 ---
@@ -73,7 +70,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "31"
-    team: ep
 spec:
   accessModes:
     - "ReadWriteOnce"
@@ -96,7 +92,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "31"
-    team: ep
 spec:
   accessModes:
     - "ReadWriteOnce"
@@ -120,7 +115,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "31"
-    team: ep
 spec:
   type: ClusterIP
   ports:
@@ -147,7 +141,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "31"
-    team: ep
 spec:
   revisionHistoryLimit: 3
   strategy:
@@ -200,7 +193,6 @@ spec:
         app.kubernetes.io/name: release-name
         tags.datadoghq.com/service: release-name
         tags.datadoghq.com/version: "31"
-        team: ep
     spec:
       enableServiceLinks: true
       serviceAccountName: release-name
@@ -334,7 +326,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "31"
-    team: ep
 spec:
   revisionHistoryLimit: 3
   strategy:
@@ -358,7 +349,6 @@ spec:
         app.kubernetes.io/name: release-name
         tags.datadoghq.com/service: release-name
         tags.datadoghq.com/version: "31"
-        team: ep
     spec:
       enableServiceLinks: true
       automountServiceAccountToken: true
@@ -426,7 +416,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "31"
-    team: ep
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -456,7 +445,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "31"
-    team: ep
 spec:
   revisionHistoryLimit: 3
   podManagementPolicy: OrderedReady
@@ -479,7 +467,6 @@ spec:
         app.kubernetes.io/name: release-name
         tags.datadoghq.com/service: release-name
         tags.datadoghq.com/version: "31"
-        team: ep
     spec: 
       enableServiceLinks: true
       automountServiceAccountToken: true
@@ -547,7 +534,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "31"
-    team: ep
 spec:
   rules:
     - host: "toto.com"
@@ -560,36 +546,6 @@ spec:
                 name: release-name
                 port:
                   number: 8080
----
-# Source: base-template/templates/base.yaml
-apiVersion: notification.toolkit.fluxcd.io/v1beta3
-kind: Alert
-metadata:
-  name: release-name-e2e-tests-one-app-test
-  labels:
-    app: release-name
-    app.kubernetes.io/component: e2eTests
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: release-name
-    helm.sh/chart: base-template-0.0.0
-    tags.datadoghq.com/service: release-name
-    tags.datadoghq.com/version: "31"
-    team: ep
-spec:
-  providerRef:
-    name: e2e-tests-flux-hooks
-  eventSources:
-    - kind: HelmRelease
-      name: release-name
-  inclusionList:
-    - ".*succeeded.*"
-  eventMetadata:
-    project: test
-    slackChannel: '#toto'
-    tags: tyty
-    type: one-app
-    version: "31"
 ---
 # Source: base-template/templates/base.yaml
 apiVersion: networking.istio.io/v1
@@ -606,7 +562,6 @@ metadata:
     istio.io/tag: stable
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "31"
-    team: ep
 spec:
   workloadSelector:
     labels:

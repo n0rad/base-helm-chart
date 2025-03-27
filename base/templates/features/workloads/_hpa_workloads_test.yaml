@@ -4,7 +4,6 @@ templates:
 tests:
   - it: datadogQuery for non main workload
     set:
-      teamShortname: ep
       workloads.toto:
         container:
           image:

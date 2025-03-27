@@ -6,7 +6,6 @@ templates:
 tests:
   - it: other SA and secret
     set:
-      teamShortname: ep
       resources.serviceAccounts.other.enabled: true
     asserts:
       - documentSelector:
@@ -38,7 +37,6 @@ tests:
 
   - it: other SA and secret with nameOverride
     set:
-      teamShortname: ep
       resources.serviceAccounts.other.nameOverride: second
     asserts:
       - documentSelector:

@@ -21,9 +21,6 @@ tests:
       value: InferenceService
     asserts:
       - equal:
-          path: metadata.labels.team
-          value: ep
-      - equal:
           path: spec.predictor.securityContext.runAsNonRoot
           value: true
       - equal:

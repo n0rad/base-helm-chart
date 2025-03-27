@@ -13,7 +13,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "1.2"
-    team: data-ops
 spec:
   maxUnavailable: 10%
   selector:
@@ -36,7 +35,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "1.2"
-    team: data-ops
 secrets:
   - name: release-name-sa-token
 ---
@@ -55,7 +53,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "1.2"
-    team: data-ops
   annotations:
     kubernetes.io/service-account.name: release-name
 ---
@@ -73,7 +70,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "1.2"
-    team: data-ops
   annotations:
     serving.kserve.io/enable-prometheus-scraping: "true"
 spec:
@@ -200,7 +196,6 @@ metadata:
     istio.io/tag: stable
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "1.2"
-    team: data-ops
 spec:
   workloadSelector:
     labels:

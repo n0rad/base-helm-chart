@@ -26,7 +26,6 @@ tests:
             helm.sh/chart: base-template-0.0.0
             tags.datadoghq.com/service: release-name
             tags.datadoghq.com/version: "31"
-            team: ep
 
   - it: retain enabled should pass
     set:
@@ -51,7 +50,6 @@ tests:
             helm.sh/chart: base-template-0.0.0
             tags.datadoghq.com/service: release-name
             tags.datadoghq.com/version: "31"
-            team: ep
 
   - it: custom metadata should pass
     set:
@@ -79,7 +77,6 @@ tests:
             helm.sh/chart: base-template-0.0.0
             tags.datadoghq.com/service: release-name
             tags.datadoghq.com/version: "31"
-            team: ep
             test_label: test
 
   - it: custom metadata with global metadata should pass
@@ -115,5 +112,4 @@ tests:
             helm.sh/chart: base-template-0.0.0
             tags.datadoghq.com/service: release-name
             tags.datadoghq.com/version: "31"
-            team: ep
             test_label: test
