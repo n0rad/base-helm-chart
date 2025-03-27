@@ -1,3 +1,8 @@
-chart-template/
 charts/
 Chart.lock
+values.schema.json
+values-default.schema.json
+
+chart-template/
+
+node_modules/

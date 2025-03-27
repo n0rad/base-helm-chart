@@ -1,34 +1,38 @@
 #!/usr/bin/env bash
 set -e
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-. "$DIR/../bin/lib/color.sh"
-
-
-helmDebugArg=""
-if [ "$DEBUG" == "true" ]; then
-  set -x
-  helmDebugArg="--debug"
-fi
-
-
-chartPath="${1:-"."}"
+DEBUG="${DEBUG:-false}"
+CHART_PATH="${1:-"."}"
 PUSH="${PUSH:-false}"
-CHART_TEMPLATE_PATH="$chartPath/chart-template"
-CHART_PATH_FROM_CI="$chartPath"
-UNIT_TESTS_RELATIVE_LOCATION="."
-
-CHART_TEMPLATE_SUFFIX="-template"
+TESTS="${TESTS:-true}"
 REGISTRY_URL="oci://ghcr.io/n0rad/"
 
 ####################
 
-is_library_chart() {
-  if [ "$(yq --unwrapScalar '.type' "$1/Chart.yaml")" == "library" ]; then
-    return 0
-  fi
-  return 1
-}
+scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+unitTestsRelativeLocation="."
+chartTemplateSuffix="-template"
+chartPathForTests="$CHART_PATH"
+chartTemplatePath="$CHART_PATH/chart-template"
+version="1.$(date -u '+%y%m%d').$(date -u '+%H%M' | awk '{print $0+0}')-H$(git rev-parse --short HEAD)"
+name=$(yq --unwrapScalar .name $CHART_PATH/Chart.yaml)
+helmDebugArg=""
+isLibraryChart=false
+
+####################
+
+. "$scriptDir/../bin/lib/color.sh"
+
+if [ "$(yq --unwrapScalar '.type' "$CHART_PATH/Chart.yaml")" == "library" ]; then
+	isLibraryChart=true
+fi
+
+if [ "$DEBUG" == "true" ] || [[ "$-" == *x* ]]; then
+  set -x
+  helmDebugArg="--debug"
+fi
+
+####################
 
 update_dependencies() {
   # Do not allow to put manually dependencies gzip files
@@ -37,66 +41,107 @@ update_dependencies() {
   helm dependency update "$1"
 }
 
+getBaseDependencyNameAndVersion() {
+		for i in $(yq '.dependencies[]? | .name + ";" + .version + ";" + .repository' Chart.yaml); do
+			IFS=';' read -ra depAttributes <<< "$i"
+			if [[ ${depAttributes[0]} =~ ^base* ]] && [[ ${depAttributes[2]} == "$REGISTRY_URL" ]]; then
+				echo "${depAttributes[0]}" "${depAttributes[1]}"
+				return
+			fi
+		done
+}
+
 ####################
 
-update_dependencies "$chartPath"
+update_dependencies "$CHART_PATH"
 
-if is_library_chart "$chartPath"; then
-	libraryName=$(yq --unwrapScalar .name $chartPath/Chart.yaml)
-	rm -Rf $CHART_TEMPLATE_PATH
-	mkdir -p $CHART_TEMPLATE_PATH/templates
+# Prepare library
+if $isLibraryChart; then
+	rm -Rf $chartTemplatePath
+	mkdir -p $chartTemplatePath/templates
 
-	cat <<- EOF > $CHART_TEMPLATE_PATH/Chart.yaml
+	cat <<- EOF > $chartTemplatePath/Chart.yaml
 		apiVersion: v2
-		name: ${libraryName}-template
+		name: ${name}-template
 		version: 0.0.0
 		dependencies:
-		  - name: ${libraryName}
+		  - name: ${name}
 		    repository: file://../
 		    version: ">0.0.0-0"
 	EOF
-	echo "---" > $CHART_TEMPLATE_PATH/values.yaml
-	initName=$(echo "${libraryName}" | cut -f1 -d-)
-	echo "{{- include \"${libraryName}.loader.all\" . -}}" > "$CHART_TEMPLATE_PATH/templates/${initName}.yaml"
-	[ -d "$chartPath/ci" ] && cp -r "$chartPath/ci" "$CHART_TEMPLATE_PATH"
+	echo "---" > $chartTemplatePath/values.yaml
+	initName=$(echo "${name}" | cut -f1 -d-)
+	echo "{{- include \"${name}.loader.all\" . -}}" > "$chartTemplatePath/templates/${initName}.yaml"
 
-  UNIT_TESTS_RELATIVE_LOCATION=".."
-  CHART_PATH_FROM_CI="$CHART_TEMPLATE_PATH"
-  update_dependencies "$CHART_TEMPLATE_PATH"
-elif is_library_chart; then
-  exit 0
+  unitTestsRelativeLocation=".."
+  chartPathForTests="$chartTemplatePath"
+  update_dependencies "$chartTemplatePath"
 fi
 
-if ls $chartPath/ci/*-values.yaml 1> /dev/null 2>&1; then
-  for filename in $(find $chartPath/ci/ -maxdepth 1 -name '*-values.yaml' -print 2> /dev/null); do
-      resname=${filename//-values.yaml/-result.yaml}
-      echo_purple "Validating against values file: $filename"
-      content=$(helm template "$CHART_PATH_FROM_CI" $validateArg --values="$filename" $helmDebugArg)
-			echo "$content" > "$resname"
-  done
+# Tests
+if $TESTS; then
+	if ls $CHART_PATH/ci/*-values.yaml 1> /dev/null 2>&1; then
+		echo_purple "Run ci tests"
+		for filename in $(find $CHART_PATH/ci/ -maxdepth 1 -name '*-values.yaml' -print 2> /dev/null); do
+				resname=${filename//-values.yaml/-result.yaml}
+				echo_blue "Validating against values file: $filename"
+				content=$(helm template "$chartPathForTests" $validateArg --values="$filename" $helmDebugArg)
+				echo "$content" > "$resname"
+		done
+	fi
+
+	echo_purple "Run unit tests"
+	helm unittest --color -f "${unitTestsRelativeLocation}/templates/**/*_test.yaml" -f "${unitTestsRelativeLocation}/tests/**/*_test.yaml" $chartPathForTests
 fi
 
+# Schema
+echo_purple "Preparing schema"
+read baseName baseVersion < <(getBaseDependencyNameAndVersion) || true
+if [ ! -f "$CHART_PATH/schema/root.schema.json" ] && [ -n "$baseName" ]; then
+	# using base chart without declaring a schema, creating one inheriting directly
+	cp "$scriptDir/lib/helm/values.schema.json" "$CHART_PATH"
+fi
 
-echo_purple "Run unit tests"
-helm unittest --color -f "${UNIT_TESTS_RELATIVE_LOCATION}/templates/**/*_test.yaml" -f "${UNIT_TESTS_RELATIVE_LOCATION}/tests/**/*_test.yaml" $CHART_PATH_FROM_CI
+if [ -f "./schema/root.schema.json" ]; then
+	echo_blue "Dereference schema and merge allOf"
+	if [ ! -d $scriptDir/lib/helm/dereferencer/node_modules ]; then
+		(
+			echo_blue "Installing node modules for derefencer"
+			cd $scriptDir/lib/helm/dereferencer
+			npm install
+		)
+	fi
+	node $scriptDir/lib/helm/dereferencer/dereferenceAndMerge.js
 
-
+	echo_blue "Replacing JSON schema placeholders"
+	chartName="$name"
+	if $isLibraryChart; then
+		chartName="$name-template"
+	fi
+	sed -i "s/{VERSION}/$version/g; \
+					s/{NAME}/$name/g; \
+					s/{CHART_NAME}/$chartName/g; \
+					s/{BASE_NAME}/$baseName/g; \
+					s/{BASE_VERSION}/$baseVersion/g" "$CHART_PATH"/*.schema.json
+fi
 
 # Release
 if [ "$PUSH" == true ]; then
-	name=$(realpath $chartPath | xargs basename)
-	version="1.$(date -u '+%y%m%d').$(date -u '+%H%M' | awk '{print $0+0}')-H$(git rev-parse --short HEAD)"
 	HELM_PACKAGE_ARGS="--version=$version"
 
 	echo_purple "Packaging $name-$version"
-	helm package $chartPath $HELM_PACKAGE_ARGS -d /tmp
+	helm package $CHART_PATH $HELM_PACKAGE_ARGS -d /tmp
 	echo_purple "Pushing $name-$version"
 	helm push "/tmp/$name-$version.tgz" "$REGISTRY_URL"
 
-	if is_library_chart "$chartPath"; then
-    echo_purple "Packaging $name$CHART_TEMPLATE_SUFFIX-$version"
-    helm package "$CHART_TEMPLATE_PATH" $HELM_PACKAGE_ARGS -d /tmp
-    echo_purple "Pushing $name$CHART_TEMPLATE_SUFFIX-$version"
-    helm push "/tmp/$name$CHART_TEMPLATE_SUFFIX-$version.tgz" "$REGISTRY_URL"
+	if $isLibraryChart; then
+    echo_purple "Packaging $name$chartTemplateSuffix-$version"
+    helm package "$chartTemplatePath" $HELM_PACKAGE_ARGS -d /tmp
+    echo_purple "Pushing $name$chartTemplateSuffix-$version"
+    helm push "/tmp/$name$chartTemplateSuffix-$version.tgz" "$REGISTRY_URL"
 	fi
+
+	tag="$name-$version"
+	gh release create "$tag"
+	gh release upload "$tag" "/tmp/$name-$version.tgz" $CHART_PATH/values.schema.json
 fi

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "'{NAME}' chart values - version '{VERSION}'",
-  "description": "ℹ\uFE0F Learn how to use this chart: [How-to guide](https://blablacar.atlassian.net/wiki/spaces/CD/pages/3129606193/How+to+use+Base+Helm+chart) ℹ\uFE0F\n\nYou can reference this schema **in your HelmRelease** by adding this at the very top:\n`# yaml-language-server: $schema=https://bbc-helm-charts.storage.googleapis.com/{NAME}/{VERSION}/helmRelease.schema.json`\n\nand **in your application chart values** with:\n`# yaml-language-server: $schema=https://bbc-helm-charts.storage.googleapis.com/{NAME}/{VERSION}/values.schema.json`\n*In order to have completion for your application chart values in HelmRelease, please refer to this [documentation](https://blablacar.atlassian.net/wiki/spaces/CD/pages/3129606193/How+to+use+Base+Helm+chart#Values-properties-completion)*\n",
+  "description": "base chart",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -66,12 +66,6 @@
     "kubeClusterName": {
       "title": "Name of the Kubernetes cluster the Chart gets deployed to.",
       "description": "This value is typically set in kube-manifests, and there is automation in place to enforce its presence.",
-      "type": "string",
-      "default": ""
-    },
-    "teamShortname": {
-      "title": "Team's shortname owning resources.",
-      "description": "Must match shortname from terraform's common team definition at:\n# Mandatory to be set and will be applied as label on each resource\n# [[ref]](https://github.com/blablacar/terraform-configs/tree/master/common)",
       "type": "string"
     },
     "mainWorkload": {

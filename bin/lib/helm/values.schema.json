@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "'{NAME}' chart values - version '{VERSION}'",
+  "description": "chart chart",
+  "$ref": "https://github.com/n0rad/base-helm-chart/releases/download/{BASE_VERSION}/values.schema.json"
+}
