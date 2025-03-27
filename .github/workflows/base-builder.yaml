@@ -42,4 +42,4 @@ jobs:
             export COMMIT=$(git log -1 --pretty=format:%H ${FIRST_COMMIT_IN_BRANCH}^)
           fi
           cd docker/base-builder
-          PUSH=true ../../bin/docker-build.sh
+          ../../bin/docker-build.sh
