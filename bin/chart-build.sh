@@ -91,7 +91,7 @@ echo_purple "Run unit tests"
 
 # Release
 if [ "$PUSH" == true ]; then
-	name=${chartPath##*/}
+	name=$(realpath $chartPath | xargs basename)
 	version="1.$(date -u '+%y%m%d').$(date -u '+%H%M' | awk '{print $0+0}')-H$(git rev-parse --short HEAD)"
 	HELM_PACKAGE_ARGS="--version=$version"
 
