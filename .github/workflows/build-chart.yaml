@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: Base
+
+on:
+  push:
+    paths:
+      - base/**
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    container: ghcr.io/n0rad/base-builder:latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build/Push chart
+        run: |
+          bin/chart-build.sh

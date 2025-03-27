@@ -1,0 +1,4 @@
+node {
+  gitCheckout()
+  load("charts.groovy").call()
+}

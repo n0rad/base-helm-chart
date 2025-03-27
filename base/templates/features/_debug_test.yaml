@@ -1,0 +1,17 @@
+suite: features debug
+templates:
+  - base.yaml
+values:
+  - ../../tests/overallValues.yaml
+tests:
+  - it: debug create configmap
+    set:
+      debug: true
+    documentSelector:
+      path: metadata.name
+      value: RELEASE-NAME-debug-base
+    asserts:
+      - isKind:
+          of: ConfigMap
+      - exists:
+          path: data.values

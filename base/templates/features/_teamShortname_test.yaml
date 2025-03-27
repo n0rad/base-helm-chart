@@ -1,0 +1,9 @@
+suite: features teamShortname
+templates:
+  - base.yaml
+tests:
+  - it: fail if no teamShortname
+    asserts:
+      - failedTemplate:
+          errorMessage: ".teamShortname value is mandatory"
+
