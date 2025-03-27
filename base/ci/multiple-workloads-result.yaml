@@ -13,7 +13,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name-titi
     tags.datadoghq.com/version: "43"
-    team: ep
 spec:
   maxUnavailable: 10%
   selector:
@@ -36,7 +35,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name-toto
     tags.datadoghq.com/version: "42"
-    team: ep
 spec:
   maxUnavailable: 10%
   selector:
@@ -59,7 +57,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name-titi
     tags.datadoghq.com/version: "43"
-    team: ep
 secrets:
   - name: release-name-titi-sa-token
 ---
@@ -77,7 +74,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name-toto
     tags.datadoghq.com/version: "42"
-    team: ep
 secrets:
   - name: release-name-toto-sa-token
 ---
@@ -94,7 +90,6 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: release-name
     helm.sh/chart: base-template-0.0.0
-    team: ep
   annotations:
     kubernetes.io/service-account.name: release-name-titi
 ---
@@ -111,7 +106,6 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: release-name
     helm.sh/chart: base-template-0.0.0
-    team: ep
   annotations:
     kubernetes.io/service-account.name: release-name-toto
 ---
@@ -130,7 +124,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name-titi
     tags.datadoghq.com/version: "43"
-    team: ep
 spec:
   type: ClusterIP
   ports:
@@ -158,7 +151,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name-toto
     tags.datadoghq.com/version: "42"
-    team: ep
 spec:
   type: ClusterIP
   ports:
@@ -185,7 +177,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name-titi
     tags.datadoghq.com/version: "43"
-    team: ep
 spec:
   revisionHistoryLimit: 3
   strategy:
@@ -213,7 +204,6 @@ spec:
         app.kubernetes.io/name: release-name
         tags.datadoghq.com/service: release-name-titi
         tags.datadoghq.com/version: "43"
-        team: ep
     spec:
       enableServiceLinks: true
       serviceAccountName: release-name-titi
@@ -336,7 +326,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name-toto
     tags.datadoghq.com/version: "42"
-    team: ep
 spec:
   revisionHistoryLimit: 3
   strategy:
@@ -364,7 +353,6 @@ spec:
         app.kubernetes.io/name: release-name
         tags.datadoghq.com/service: release-name-toto
         tags.datadoghq.com/version: "42"
-        team: ep
     spec:
       enableServiceLinks: true
       serviceAccountName: release-name-toto
@@ -487,7 +475,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name-titi
     tags.datadoghq.com/version: "43"
-    team: ep
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -517,7 +504,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name-toto
     tags.datadoghq.com/version: "42"
-    team: ep
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -546,7 +532,6 @@ metadata:
     app.kubernetes.io/name: release-name
     helm.sh/chart: base-template-0.0.0
     istio.io/tag: stable
-    team: ep
 spec:
   workloadSelector:
     labels:
@@ -573,7 +558,6 @@ metadata:
     app.kubernetes.io/name: release-name
     helm.sh/chart: base-template-0.0.0
     istio.io/tag: stable
-    team: ep
 spec:
   workloadSelector:
     labels:

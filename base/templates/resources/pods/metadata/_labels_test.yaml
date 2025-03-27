@@ -7,10 +7,12 @@ values:
   - ../../../../tests/overallValues.yaml
 tests:
   - it: have allLabels
+    set:
+      global.labels.test: ouda
     documentSelector:
       path: kind
       value: Deployment
     asserts:
       - equal:
-          path: spec.template.metadata.labels.team
-          value: ep
+          path: spec.template.metadata.labels.test
+          value: ouda

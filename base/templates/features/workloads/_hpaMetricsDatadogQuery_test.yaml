@@ -10,7 +10,7 @@ tests:
       kubeClusterName: preprod-1
       mainWorkload.hpa.metrics.datadogQuery:
         query: |
-          {{.Values.teamShortname}}-{{.environment}}-sum:trace.servlet.request.hits{env:prod,service:pro-pim}.as_rate()
+          {{.environment}}-sum:trace.servlet.request.hits{env:prod,service:pro-pim}.as_rate()
         averageValue: 15
     asserts:
       - documentSelector:
@@ -38,7 +38,7 @@ tests:
           value: DatadogMetric
         equal:
           path: spec.query
-          value: ep-preprod-sum:trace.servlet.request.hits{env:prod,service:pro-pim}.as_rate()
+          value: preprod-sum:trace.servlet.request.hits{env:prod,service:pro-pim}.as_rate()
       - documentSelector:
           path: kind
           value: DatadogMetric

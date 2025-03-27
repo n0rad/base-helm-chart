@@ -4,7 +4,6 @@ templates:
 tests:
   - it: environment is provided to rootContext
     set:
-      teamShortname: ep
       kubeClusterName: prod-1
       resources:
         configMaps:

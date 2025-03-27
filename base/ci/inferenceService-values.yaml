@@ -1,7 +1,5 @@
 # yaml-language-server: $schema=../schema/values.schema.json
 
-teamShortname: data-ops
-
 mainWorkload:
   type: InferenceService
   container:

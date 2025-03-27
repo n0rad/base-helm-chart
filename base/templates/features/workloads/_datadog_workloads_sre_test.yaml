@@ -6,7 +6,6 @@ templates:
 tests:
   - it: datadog service and version for non main workload
     set:
-      teamShortname: sre
       workloads.other:
         service:
           ports:

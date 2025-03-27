@@ -13,7 +13,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "31"
-    team: ep
 spec:
   maxUnavailable: 10%
   selector:
@@ -36,7 +35,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "31"
-    team: ep
 secrets:
   - name: release-name-sa-token
 ---
@@ -55,7 +53,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "31"
-    team: ep
   annotations:
     kubernetes.io/service-account.name: release-name
 ---
@@ -73,7 +70,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "31"
-    team: ep
 data:
   test: value 1
 ---
@@ -92,7 +88,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "31"
-    team: ep
 spec:
   type: ClusterIP
   ports:
@@ -119,7 +114,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "31"
-    team: ep
 spec:
   revisionHistoryLimit: 3
   strategy:
@@ -148,7 +142,6 @@ spec:
         app.kubernetes.io/name: release-name
         tags.datadoghq.com/service: release-name
         tags.datadoghq.com/version: "31"
-        team: ep
     spec:
       enableServiceLinks: true
       serviceAccountName: release-name
@@ -343,7 +336,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "31"
-    team: ep
 spec:
   revisionHistoryLimit: 3
   strategy:
@@ -368,7 +360,6 @@ spec:
         app.kubernetes.io/name: release-name
         tags.datadoghq.com/service: release-name
         tags.datadoghq.com/version: "31"
-        team: ep
     spec:
       enableServiceLinks: true
       automountServiceAccountToken: true
@@ -426,7 +417,6 @@ metadata:
     helm.sh/chart: base-template-0.0.0
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "31"
-    team: ep
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -457,7 +447,6 @@ metadata:
     istio.io/tag: stable
     tags.datadoghq.com/service: release-name
     tags.datadoghq.com/version: "31"
-    team: ep
 spec:
   workloadSelector:
     labels:

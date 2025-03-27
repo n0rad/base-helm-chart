@@ -11,7 +11,6 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: release-name
     helm.sh/chart: base-template-0.0.0
-    team: ep
 data:
   test: value 1
 ---
@@ -27,7 +26,6 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: release-name
     helm.sh/chart: base-template-0.0.0
-    team: ep
 spec:
   concurrencyPolicy: "Forbid"
   startingDeadlineSeconds: 30
@@ -48,7 +46,6 @@ spec:
             app.kubernetes.io/component: main
             app.kubernetes.io/instance: release-name
             app.kubernetes.io/name: release-name
-            team: ep
         spec:
           enableServiceLinks: true
           automountServiceAccountToken: true
