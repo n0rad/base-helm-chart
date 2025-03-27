@@ -18,7 +18,6 @@ CHART_TEMPLATE_PATH="$chartPath/chart-template"
 CHART_PATH_FROM_CI="$chartPath"
 UNIT_TESTS_RELATIVE_LOCATION="."
 
-UPDATE_SNAPSHOTS=true
 CHART_TEMPLATE_SUFFIX="-template"
 REGISTRY_URL="oci://ghcr.io/n0rad/"
 
@@ -39,6 +38,8 @@ update_dependencies() {
 }
 
 ####################
+
+update_dependencies "$chartPath"
 
 if is_library_chart "$chartPath"; then
 	libraryName=$(yq --unwrapScalar .name $chartPath/Chart.yaml)
@@ -69,18 +70,9 @@ fi
 if ls $chartPath/ci/*-values.yaml 1> /dev/null 2>&1; then
   for filename in $(find $chartPath/ci/ -maxdepth 1 -name '*-values.yaml' -print 2> /dev/null); do
       resname=${filename//-values.yaml/-result.yaml}
-      echo_purple "Validating against values file : $filename"
+      echo_purple "Validating against values file: $filename"
       content=$(helm template "$CHART_PATH_FROM_CI" $validateArg --values="$filename" $helmDebugArg)
-      [ "$DEBUG" == "true" ] && echo $content
-      if [ -f "$resname" ]; then
-        if [ "$UPDATE_SNAPSHOTS" == "true" ]; then
-          echo_purple "Updating result in $resname"
-          echo "$content" > "$resname"
-        else
-          echo_purple "Comparing with expected result in $resname"
-          diff -u "$resname" <(echo "$content")
-        fi
-      fi
+			echo "$content" > "$resname"
   done
 fi
 
