@@ -29,6 +29,7 @@ jobs:
       - name: Build/Push chart
         run: |
           export HOME=/root # stupid github action container changing home
+          git config --global --add safe.directory /__w/base-helm-chart/base-helm-chart
 
           if [ "$branch" == "main" ]; then
             export PUSH=true
