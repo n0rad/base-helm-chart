@@ -15,7 +15,8 @@ jobs:
     container: ghcr.io/n0rad/base-builder:latest
     permissions:
       packages: write
-
+    env:
+      HOME: /root
     steps:
       - uses: actions/checkout@v4
         with:
@@ -30,7 +31,7 @@ jobs:
 
       - name: Build/Push chart
         run: |
-          export HOME=/root # stupid github action container changing home
+          #export HOME=/root # stupid github action container changing home
           git config --global --add safe.directory /__w/base-helm-chart/base-helm-chart
 
           if [ "$branch" == "main" ]; then
