@@ -1,0 +1,7 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@apidevtools/json-schema-ref-parser": "^11.6.4",
+    "json-schema-merge-allof": "^0.8.1"
+  }
+}

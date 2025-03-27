@@ -1,3 +1,5 @@
 chart-template/
 charts/
 Chart.lock
+values.schema.json
+default-values.schema.json

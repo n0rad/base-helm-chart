@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "'{NAME}' chart values - version '{VERSION}'",
+  "description": "You can reference this schema **in your HelmRelease** by adding this at the very top:\n`# yaml-language-server: $schema=https://bbc-helm-charts.storage.googleapis.com/{NAME}/{VERSION}/helmRelease.schema.json`\n\nand **in values files** with:\n`# yaml-language-server: $schema=https://bbc-helm-charts.storage.googleapis.com/{NAME}/{VERSION}/values.schema.json`\n",
+  "$ref": "https://bbc-helm-charts.storage.googleapis.com/{BASE_NAME}/{BASE_VERSION}/values.schema.json"
+}
