@@ -13,6 +13,8 @@ jobs:
   push:
     runs-on: ubuntu-latest
     container: ghcr.io/n0rad/base-builder:latest
+    permissions:
+      packages: write
 
     steps:
       - uses: actions/checkout@v4
