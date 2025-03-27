@@ -19,4 +19,5 @@ jobs:
 
       - name: Build/Push chart
         run: |
-          bin/chart-build.sh
+          cd base
+          ../bin/chart-build.sh
