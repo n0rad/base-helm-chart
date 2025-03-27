@@ -12,7 +12,7 @@ try {
     });
     fs.writeFileSync('values.schema.json', JSON.stringify(mergedAllOfSchema));
     nullableTypes(mergedAllOfSchema)
-    fs.writeFileSync('default-values.schema.json', JSON.stringify(mergedAllOfSchema));
+    fs.writeFileSync('values-default.schema.json', JSON.stringify(mergedAllOfSchema));
 } catch (err) {
     console.error(err);
     process.exit(1);
