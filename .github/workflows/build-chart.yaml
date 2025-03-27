@@ -21,6 +21,6 @@ jobs:
 
       - name: Build/Push chart
         run: |
-          who
+          whoami
           cd base
           ../bin/chart-build.sh
