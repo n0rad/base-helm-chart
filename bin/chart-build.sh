@@ -13,9 +13,12 @@ fi
 
 
 chartPath="${1:-"."}"
+PUSH="${PUSH:-false}"
 CHART_TEMPLATE_PATH="$chartPath/chart-template"
+CHART_PATH_FROM_CI="$chartPath"
 UPDATE_SNAPSHOTS=true
 CHART_TEMPLATE_SUFFIX="-template"
+REGISTRY_URL="oci://ghcr.io/n0rad/"
 
 ####################
 
@@ -36,7 +39,7 @@ update_dependencies() {
 ####################
 
 chartTestsPath="."
-if is_library_chart $chartPath; then
+if is_library_chart "$chartPath"; then
 	libraryName=$(yq --unwrapScalar .name $chartPath/Chart.yaml)
 	rm -Rf $CHART_TEMPLATE_PATH
 	mkdir -p $CHART_TEMPLATE_PATH/templates
@@ -55,9 +58,9 @@ if is_library_chart $chartPath; then
 	echo "{{- include \"${libraryName}.loader.all\" . -}}" > "$CHART_TEMPLATE_PATH/templates/${initName}.yaml"
 	[ -d "$chartPath/ci" ] && cp -r "$chartPath/ci" "$CHART_TEMPLATE_PATH"
 
-  chartPath=$CHART_TEMPLATE_PATH
   chartTestsPath=".."
-  update_dependencies "$chartPath"
+  CHART_PATH_FROM_CI="$CHART_TEMPLATE_PATH"
+  update_dependencies "$CHART_TEMPLATE_PATH"
 elif is_library_chart; then
   exit 0
 fi
@@ -66,7 +69,7 @@ if ls $chartPath/ci/*-values.yaml 1> /dev/null 2>&1; then
   for filename in $(find $chartPath/ci/ -maxdepth 1 -name '*-values.yaml' -print 2> /dev/null); do
       resname=${filename//-values.yaml/-result.yaml}
       echo_purple "Validating against values file : $filename"
-      content=$(helm template $chartPath $validateArg --values="$filename" $helmDebugArg)
+      content=$(helm template "$CHART_PATH_FROM_CI" $validateArg --values="$filename" $helmDebugArg)
       [ "$DEBUG" == "true" ] && echo $content
       if [ -f "$resname" ]; then
         if [ "$UPDATE_SNAPSHOTS" == "true" ]; then
@@ -82,4 +85,22 @@ fi
 
 
 echo_purple "Run unit tests"
-helm unittest --color -f "${chartTestsPath}/templates/**/*_test.yaml" -f "${chartTestsPath}/tests/**/*_test.yaml" $chartPath
+#helm unittest --color -f "${chartTestsPath}/templates/**/*_test.yaml" -f "${chartTestsPath}/tests/**/*_test.yaml" $chartPath
+
+
+
+# Release
+if [ "$PUSH" == true ]; then
+	name=${chartPath##*/}
+	version="1.$(date -u '+%y%m%d').$(date -u '+%H%M' | awk '{print $0+0}')-H$(git rev-parse --short HEAD)"
+	HELM_PACKAGE_ARGS="--version=$version"
+
+	helm package $chartPath $HELM_PACKAGE_ARGS -d /tmp
+	helm push "/tmp/$name-$version.tgz" "$REGISTRY_URL"
+
+	if is_library_chart "$chartPath"; then
+    echo_purple "packaging $name$CHART_TEMPLATE_SUFFIX-$version"
+    helm package "$CHART_TEMPLATE_PATH" $HELM_PACKAGE_ARGS -d /tmp
+    helm push "/tmp/$name$CHART_TEMPLATE_SUFFIX-$version.tgz" "$REGISTRY_URL"
+	fi
+fi

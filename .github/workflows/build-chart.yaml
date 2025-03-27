@@ -19,9 +19,19 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Login to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build/Push chart
         run: |
           export HOME=/root # stupid github action container changing home
 
+          if [ "$branch" == "main" ]; then
+            export PUSH=true
+          fi
           cd base
           ../bin/chart-build.sh
