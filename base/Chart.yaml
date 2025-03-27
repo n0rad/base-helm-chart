@@ -1,0 +1,9 @@
+apiVersion: v2
+name: base
+description: Base chart library supporting templating of all kind of resources along features
+type: library
+version: 0.0.0
+kubeVersion: ">=1.22.0-0"
+home: https://github.com/n0rad/base-helm-charts
+sources:
+- https://github.com/n0rad/base-helm-charts/tree/main/ep/base

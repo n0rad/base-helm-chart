@@ -1,0 +1,387 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
+suite: features e2e tests
+templates:
+  - base.yaml
+values:
+  - ../../tests/overallValues.yaml
+tests:
+  - it: enabled
+    set:
+      teamShortname: ep
+      e2eTests:
+        enabled: true
+        helmRelease: RELEASE-NAME
+        defaultSlackChannel: '#yopla'
+        testSuite:
+          - type: one-app
+            project: toto
+            tags: [tag1, tag2]
+          - type: bus-aggregation-engine
+            tags: [tag1]
+    documentSelector:
+      path: kind
+      value: Alert
+    asserts:
+      - equal:
+          path: spec.providerRef.name
+          value: e2e-tests-flux-hooks
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-e2e-tests-one-app-toto
+      - equal:
+          path: metadata.labels.team
+          value: ep
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-e2e-tests-one-app-toto
+      - equal:
+          path: spec.eventSources
+          value:
+            - kind: HelmRelease
+              name: RELEASE-NAME
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-e2e-tests-one-app-toto
+      - equal:
+          path: spec.eventMetadata.type
+          value: one-app
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-e2e-tests-one-app-toto
+      - equal:
+          path: spec.eventMetadata.project
+          value: toto
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-e2e-tests-one-app-toto
+      - equal:
+          path: spec.eventMetadata.slackChannel
+          value: '#yopla'
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-e2e-tests-one-app-toto
+      - equal:
+          path: spec.eventMetadata.tags
+          value: tag1,tag2
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-e2e-tests-one-app-toto
+      - equal:
+          path: spec.eventMetadata.version
+          value: "31"
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-e2e-tests-one-app-toto
+      - equal:
+          path: spec.providerRef.name
+          value: e2e-tests-flux-hooks
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-e2e-tests-bus-aggregation-engine
+      - equal:
+          path: metadata.labels.team
+          value: ep
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-e2e-tests-bus-aggregation-engine
+      - equal:
+          path: spec.eventSources
+          value:
+            - kind: HelmRelease
+              name: RELEASE-NAME
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-e2e-tests-bus-aggregation-engine
+      - equal:
+          path: spec.eventMetadata.type
+          value: bus-aggregation-engine
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-e2e-tests-bus-aggregation-engine
+      - equal:
+          path: spec.eventMetadata.slackChannel
+          value: '#yopla'
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-e2e-tests-bus-aggregation-engine
+      - equal:
+          path: spec.eventMetadata.tags
+          value: tag1
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-e2e-tests-bus-aggregation-engine
+      - equal:
+          path: spec.eventMetadata.version
+          value: "31"
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-e2e-tests-bus-aggregation-engine
+
+  - it: heritate helmRelease & version from the default chart values
+    set:
+      e2eTests:
+        enabled: true
+        testSuite:
+          - type: one-app
+            project: toto
+            tags: [tag1, tag2]
+            slackChannel: '#yopla'
+    documentSelector:
+      path: kind
+      value: Alert
+    asserts:
+      - equal:
+          path: spec.eventMetadata.version
+          value: "31"
+      - equal:
+          path: spec.eventSources
+          value:
+            - kind: HelmRelease
+              name: RELEASE-NAME
+
+  - it: hr can be set to overload default values
+    set:
+      e2eTests:
+        enabled: true
+        helmRelease: toto
+        testSuite:
+          - type: one-app
+            project: toto
+            tags: [tag1, tag2]
+            slackChannel: '#yopla'
+    documentSelector:
+      path: kind
+      value: Alert
+    asserts:
+      - equal:
+          path: spec.eventSources
+          value:
+            - kind: HelmRelease
+              name: toto
+
+  - it: version can be set to overload default values
+    set:
+      e2eTests:
+        enabled: true
+        version: "test"
+        testSuite:
+          - type: one-app
+            project: toto
+            tags: [tag1, tag2]
+            slackChannel: '#yopla'
+    documentSelector:
+      path: kind
+      value: Alert
+    asserts:
+      - equal:
+          path: spec.eventMetadata.version
+          value: test
+
+  - it: helmRelease is mandatory
+    set:
+      e2eTests:
+        enabled: true
+        helmRelease: ""
+    asserts:
+      - failedTemplate:
+          errorMessage: .Values.e2eTests.helmRelease is mandatory
+
+  - it: testSuite is mandatory
+    set:
+      e2eTests:
+        enabled: true
+        helmRelease: "test"
+        testSuite: []
+    asserts:
+      - failedTemplate:
+          errorMessage: .Values.e2eTests.testSuite is mandatory
+
+  - it: testSuite cannot be empty
+    set:
+      e2eTests:
+        enabled: true
+        helmRelease: "test"
+        testSuite: [""]
+    asserts:
+      - failedTemplate:
+          errorMessage: .Values.e2eTests.testSuite must contain 1 test
+
+  - it: testSuite type is mandatory & fallback to one-app by default
+    set:
+      e2eTests:
+        enabled: true
+        helmRelease: "test"
+        testSuite:
+          - project: toto
+            tags: [tag1, tag2]
+            slackChannel: '#yopla'
+    documentSelector:
+      path: kind
+      value: Alert
+    asserts:
+      - equal:
+          path: spec.eventMetadata.type
+          value: one-app
+
+  - it: testSuite type must be in the defined list
+    set:
+      e2eTests:
+        enabled: true
+        helmRelease: "test"
+        version: ''
+        defaultSlackChannel: "#test"
+        testSuite:
+          - type: test
+    asserts:
+      - failedTemplate:
+          errorMessage: .Values.e2eTests.testSuite[].type must be in [one-app bus-aggregation-office bus-aggregation-engine]
+
+  - it: Only one occurence maximue allowed for 'bus-aggregation-engine' type
+    set:
+      e2eTests:
+        enabled: true
+        helmRelease: "test"
+        version: ''
+        defaultSlackChannel: "#test"
+        testSuite:
+          - type: bus-aggregation-engine
+            tags: [""]
+          - type: bus-aggregation-engine
+            tags: [""]
+    asserts:
+      - failedTemplate:
+          errorMessage: Only one occurence maximue allowed for 'bus-aggregation-engine' type
+
+  - it: Only one occurence maximue allowed for 'bus-aggregation-office' type
+    set:
+      e2eTests:
+        enabled: true
+        helmRelease: "test"
+        version: ''
+        defaultSlackChannel: "#test"
+        testSuite:
+          - type: bus-aggregation-office
+            tags: [""]
+          - type: bus-aggregation-office
+            tags: [""]
+    asserts:
+      - failedTemplate:
+          errorMessage: Only one occurence maximue allowed for 'bus-aggregation-office' type
+
+  - it: testSuite tags is mandatory
+    set:
+      e2eTests:
+        enabled: true
+        helmRelease: "test"
+        testSuite:
+          - type: bus-aggregation-office
+    asserts:
+      - failedTemplate:
+          errorMessage: .Values.e2eTests.testSuite[].tags is mandatory
+
+  - it: testSuite tags can be empty
+    set:
+      e2eTests:
+        enabled: true
+        helmRelease: "test"
+        version: ''
+        defaultSlackChannel: "#test"
+        testSuite:
+          - type: bus-aggregation-office
+            tags: [""]
+    documentSelector:
+      path: kind
+      value: Alert
+    asserts:
+      - equal:
+          path: spec.eventMetadata.tags
+          value: ""
+
+  - it: A slackChannel is mandatory
+    set:
+      e2eTests: 
+        enabled: true
+        helmRelease: "test"
+        version: ''
+        testSuite:
+          - type: bus-aggregation-office
+            tags: [""]
+    asserts:
+      - failedTemplate:
+          errorMessage: A slackChannel is mandatory (in .Values.e2eTests.testSuite[].slackChannel or .Values.e2eTests.defaultSlackChannel)
+
+  - it: "slackChannel with a wrong length"
+    set:
+      e2eTests:
+        enabled: true
+        helmRelease: "test"
+        version: ''
+        testSuite:
+          - type: bus-aggregation-office
+            tags: [""]
+            slackChannel: "#e"
+    asserts:
+      - failedTemplate:
+          errorMessage: "The slackChannel must be a slack channel (starting with # and with a length > 3)"
+
+  - it: "slackChannel without a #"
+    set:
+      e2eTests:
+        enabled: true
+        helmRelease: "test"
+        version: ''
+        testSuite:
+          - type: bus-aggregation-office
+            tags: [""]
+            slackChannel: "testlong"
+    asserts:
+      - failedTemplate:
+          errorMessage: "The slackChannel must be a slack channel (starting with # and with a length > 3)"
+
+  - it: Using defaultSlackChannel
+    set:
+      e2eTests:
+        enabled: true
+        helmRelease: "test"
+        version: ''
+        defaultSlackChannel: "#test"
+        testSuite:
+          - type: bus-aggregation-office
+            tags: [""]
+    documentSelector:
+      path: kind
+      value: Alert
+    asserts:
+      - equal:
+          path: spec.eventMetadata.slackChannel
+          value: "#test"
+
+  - it: "Project is missing on one-app testsuite type"
+    set:
+      e2eTests:
+        enabled: true
+        helmRelease: "test"
+        version: ''
+        testSuite:
+          - type: one-app
+            tags: [""]
+            slackChannel: "#test"
+    asserts:
+      - failedTemplate:
+          errorMessage: ".Values.e2eTests.testSuite[].projects is allowed and mandatory only when type is 'one-app'"
+
+  - it: "Project is present on other testsuite type than one-app"
+    set:
+      e2eTests:
+        enabled: true
+        helmRelease: "test"
+        version: ''
+        testSuite:
+          - type: bus-aggregation-office
+            tags: [""]
+            slackChannel: "#test"
+            project: "e"
+    asserts:
+      - failedTemplate:
+          errorMessage: ".Values.e2eTests.testSuite[].projects is allowed and mandatory only when type is 'one-app'"
