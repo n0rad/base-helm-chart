@@ -127,7 +127,6 @@ fi
 
 # Release
 if [ "$PUSH" == true ]; then
-	name=$(realpath $CHART_PATH | xargs basename)
 	HELM_PACKAGE_ARGS="--version=$version"
 
 	echo_purple "Packaging $name-$version"
@@ -141,4 +140,8 @@ if [ "$PUSH" == true ]; then
     echo_purple "Pushing $name$chartTemplateSuffix-$version"
     helm push "/tmp/$name$chartTemplateSuffix-$version.tgz" "$REGISTRY_URL"
 	fi
+
+	tag="$name-$version"
+	gh release create "$tag"
+	gh release upload "$tag" "/tmp/$name-$version.tgz" $CHART_PATH/values.schema.json
 fi
