@@ -4,7 +4,9 @@ templates:
 values:
   - ../../../tests/overallValues.yaml
 tests:
-  - it: pod should have the 4 Istio's annotations by default
+  - it: pod should have the 4 Istio's annotations when enabled
+    set:
+      mainWorkload.istio.enabled: true
     documentSelector:
       path: kind
       value: Deployment

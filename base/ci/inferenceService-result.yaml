@@ -180,31 +180,3 @@ spec:
         name: sklearn
       protocolVersion: v2
       storageUri: gs://bucket/prefix
----
-# Source: base-template/templates/base.yaml
-apiVersion: networking.istio.io/v1
-kind: Sidecar
-metadata:
-  name: release-name
-  labels:
-    app: release-name
-    app.kubernetes.io/component: main
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: release-name
-    helm.sh/chart: base-template-0.0.0
-    istio.io/tag: stable
-    tags.datadoghq.com/service: release-name
-    tags.datadoghq.com/version: "1.2"
-spec:
-  workloadSelector:
-    labels:
-      app.kubernetes.io/component: main
-      app.kubernetes.io/instance: release-name
-      app.kubernetes.io/name: release-name
-  outboundTrafficPolicy:
-    mode: "REGISTRY_ONLY"
-  egress:
-    - hosts:
-      - istio-system/metadata.google.internal
-      - istio-system/metadata.google.internal.

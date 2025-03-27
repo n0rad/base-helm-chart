@@ -5,6 +5,8 @@ values:
   - ../../tests/overallValues.yaml
 tests:
   - it: validation by default
+    set:
+      mainWorkload.istio.enabled: true
     documentSelector:
       path: kind
       value: Sidecar
@@ -15,6 +17,7 @@ tests:
 
   - it: validate sidecar resource
     set:
+      mainWorkload.istio.enabled: true
       istio.resourceValidation.enabled: true
     documentSelector:
       path: kind
@@ -26,6 +29,7 @@ tests:
 
   - it: istio tag can be overridden
     set:
+      mainWorkload.istio.enabled: true
       istio.resourceValidation:
         enabled: true
         revisionTag: canary
