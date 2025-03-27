@@ -16,6 +16,8 @@ chartPath="${1:-"."}"
 PUSH="${PUSH:-false}"
 CHART_TEMPLATE_PATH="$chartPath/chart-template"
 CHART_PATH_FROM_CI="$chartPath"
+UNIT_TESTS_RELATIVE_LOCATION="."
+
 UPDATE_SNAPSHOTS=true
 CHART_TEMPLATE_SUFFIX="-template"
 REGISTRY_URL="oci://ghcr.io/n0rad/"
@@ -38,7 +40,6 @@ update_dependencies() {
 
 ####################
 
-chartTestsPath="."
 if is_library_chart "$chartPath"; then
 	libraryName=$(yq --unwrapScalar .name $chartPath/Chart.yaml)
 	rm -Rf $CHART_TEMPLATE_PATH
@@ -58,7 +59,7 @@ if is_library_chart "$chartPath"; then
 	echo "{{- include \"${libraryName}.loader.all\" . -}}" > "$CHART_TEMPLATE_PATH/templates/${initName}.yaml"
 	[ -d "$chartPath/ci" ] && cp -r "$chartPath/ci" "$CHART_TEMPLATE_PATH"
 
-  chartTestsPath=".."
+  UNIT_TESTS_RELATIVE_LOCATION=".."
   CHART_PATH_FROM_CI="$CHART_TEMPLATE_PATH"
   update_dependencies "$CHART_TEMPLATE_PATH"
 elif is_library_chart; then
@@ -85,7 +86,7 @@ fi
 
 
 echo_purple "Run unit tests"
-#helm unittest --color -f "${chartTestsPath}/templates/**/*_test.yaml" -f "${chartTestsPath}/tests/**/*_test.yaml" $chartPath
+helm unittest --color -f "${UNIT_TESTS_RELATIVE_LOCATION}/templates/**/*_test.yaml" -f "${UNIT_TESTS_RELATIVE_LOCATION}/tests/**/*_test.yaml" $CHART_PATH_FROM_CI
 
 
 
