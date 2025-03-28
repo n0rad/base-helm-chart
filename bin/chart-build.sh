@@ -121,7 +121,12 @@ if [ -f "$CHART_PATH/schema/root.schema.json" ]; then
 					s/{CHART_NAME}/$chartName/g; \
 					s/{BASE_NAME}/$baseName/g; \
 					s/{BASE_VERSION}/$baseVersion/g" "$CHART_PATH"/*.schema.json
+
+echo_purple "Validating schema"
+	chartRealPath=$(realpath "$CHART_PATH")
+ (cd $scriptDir/lib/helm/schema && go run . "$chartRealPath")
 fi
+
 
 # Release
 if [ "$PUSH" == true ]; then
