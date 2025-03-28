@@ -79,7 +79,7 @@ chartDefaults:
       nodepool: volatile
 
     datadog:
-      enabled: true
+      enabled: false
       #use it for jmx + tracing + dogstatsd if there features are enabled
       unixSocket:
         enabled: true #  If true : mount volume unix socket + add ref to unix socket +  If false to the hostIP as datadog is a daemonset  valueFrom.fieldRef.fieldPath: status.hostIP

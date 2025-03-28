@@ -7,6 +7,8 @@ values:
   - ../../../tests/overallValues.yaml
 tests:
   - it: unified tagging
+    set:
+      mainWorkload.datadog.enabled: true
     documentSelector:
       path: kind
       value: Deployment
@@ -31,10 +33,12 @@ tests:
       - equal:
           path: spec.template.metadata.labels['tags.datadoghq.com/service']
           value: release-name
+
   - it: unified tagging support templated appVersion
     chart:
       appVersion: 1.1.1
     set:
+      mainWorkload.datadog.enabled: true
       resources.controllers.main.containers.main.image:
         tag: '{{ .Chart.AppVersion }}'
         repository: ghcr.io/mendhak/http-https-echo
@@ -51,6 +55,7 @@ tests:
 
   - it: override image tag on controller is seen by datadog
     set:
+      mainWorkload.datadog.enabled: true
       resources.controllers.main.containers.main.image:
         repository: test
         tag: 42
