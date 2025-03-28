@@ -140,9 +140,6 @@ tests:
             - configMap:
                 name: myConfigMap
               name: data
-            - hostPath:
-                path: /var/run/datadog
-              name: dsdsocket
             - emptyDir: {}
               name: tmp
       - documentSelector:
@@ -177,12 +174,12 @@ tests:
       value: Deployment
     asserts:
       - equal:
-          path: spec.template.spec.containers[0].volumeMounts[1]
+          path: spec.template.spec.containers[0].volumeMounts[0]
           value:
             mountPath: /etc/podinfo
             name: podinfo
       - equal:
-          path: spec.template.spec.volumes[1]
+          path: spec.template.spec.volumes[0]
           value:
             name: podinfo
             downwardAPI:
@@ -217,7 +214,7 @@ tests:
       value: Deployment
     asserts:
       - equal:
-          path: spec.template.spec.volumes[1]
+          path: spec.template.spec.volumes[0]
           value:
             name: podinfo
             secret:
@@ -242,16 +239,13 @@ tests:
         equal:
           path: spec.template.spec.volumes
           value:
-            - hostPath:
-                path: /var/run/datadog
-              name: dsdsocket
             - emptyDir: {}
               name: tmp
       - documentSelector:
           path: metadata.name
           value: RELEASE-NAME-first
         equal:
-          path: spec.template.spec.containers[0].volumeMounts[1]
+          path: spec.template.spec.containers[0].volumeMounts[0]
           value:
             mountPath: /test
             name: test

@@ -11,8 +11,6 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: release-name
     helm.sh/chart: base-template-0.0.0
-    tags.datadoghq.com/service: release-name
-    tags.datadoghq.com/version: "42"
 spec:
   maxUnavailable: 10%
   selector:
@@ -33,8 +31,6 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: release-name
     helm.sh/chart: base-template-0.0.0
-    tags.datadoghq.com/service: release-name-titi
-    tags.datadoghq.com/version: "43"
 spec:
   maxUnavailable: 10%
   selector:
@@ -55,8 +51,6 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: release-name
     helm.sh/chart: base-template-0.0.0
-    tags.datadoghq.com/service: release-name
-    tags.datadoghq.com/version: "42"
 secrets:
   - name: release-name-sa-token
 ---
@@ -72,8 +66,6 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: release-name
     helm.sh/chart: base-template-0.0.0
-    tags.datadoghq.com/service: release-name-titi
-    tags.datadoghq.com/version: "43"
 secrets:
   - name: release-name-titi-sa-token
 ---
@@ -90,8 +82,6 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: release-name
     helm.sh/chart: base-template-0.0.0
-    tags.datadoghq.com/service: release-name
-    tags.datadoghq.com/version: "42"
   annotations:
     kubernetes.io/service-account.name: release-name
 ---
@@ -108,8 +98,6 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: release-name
     helm.sh/chart: base-template-0.0.0
-    tags.datadoghq.com/service: release-name
-    tags.datadoghq.com/version: "42"
   annotations:
     kubernetes.io/service-account.name: release-name-titi
 ---
@@ -126,8 +114,6 @@ metadata:
     app.kubernetes.io/name: release-name
     app.kubernetes.io/service: release-name
     helm.sh/chart: base-template-0.0.0
-    tags.datadoghq.com/service: release-name
-    tags.datadoghq.com/version: "42"
 spec:
   type: ClusterIP
   ports:
@@ -153,8 +139,6 @@ metadata:
     app.kubernetes.io/name: release-name
     app.kubernetes.io/service: release-name-titi
     helm.sh/chart: base-template-0.0.0
-    tags.datadoghq.com/service: release-name-titi
-    tags.datadoghq.com/version: "43"
 spec:
   type: ClusterIP
   ports:
@@ -179,8 +163,6 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: release-name
     helm.sh/chart: base-template-0.0.0
-    tags.datadoghq.com/service: release-name
-    tags.datadoghq.com/version: "42"
 spec:
   revisionHistoryLimit: 3
   strategy:
@@ -203,8 +185,6 @@ spec:
         app.kubernetes.io/instance: release-name
         app.kubernetes.io/name: release-name
         sidecar.istio.io/inject: "false"
-        tags.datadoghq.com/service: release-name
-        tags.datadoghq.com/version: "42"
     spec:
       enableServiceLinks: true
       serviceAccountName: release-name
@@ -257,18 +237,7 @@ spec:
           operator: Equal
           value: "true"
       containers:
-        - env:
-          - name: DD_SERVICE
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.labels['tags.datadoghq.com/service']
-          - name: DD_TRACE_ENABLED
-            value: "true"
-          - name: DD_VERSION
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.labels['tags.datadoghq.com/version']
-          image: there:42
+        - image: there:42
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -302,14 +271,9 @@ spec:
               port: 8080
             timeoutSeconds: 1
           volumeMounts:
-          - mountPath: /var/run/datadog
-            name: dsdsocket
           - mountPath: /tmp
             name: tmp
       volumes:
-        - hostPath:
-            path: /var/run/datadog
-          name: dsdsocket
         - emptyDir: {}
           name: tmp
 ---
@@ -325,8 +289,6 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: release-name
     helm.sh/chart: base-template-0.0.0
-    tags.datadoghq.com/service: release-name-titi
-    tags.datadoghq.com/version: "43"
 spec:
   revisionHistoryLimit: 3
   strategy:
@@ -349,8 +311,6 @@ spec:
         app.kubernetes.io/instance: release-name
         app.kubernetes.io/name: release-name
         sidecar.istio.io/inject: "false"
-        tags.datadoghq.com/service: release-name-titi
-        tags.datadoghq.com/version: "43"
     spec:
       enableServiceLinks: true
       serviceAccountName: release-name-titi
@@ -403,18 +363,7 @@ spec:
           operator: Equal
           value: "true"
       containers:
-        - env:
-          - name: DD_SERVICE
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.labels['tags.datadoghq.com/service']
-          - name: DD_TRACE_ENABLED
-            value: "true"
-          - name: DD_VERSION
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.labels['tags.datadoghq.com/version']
-          image: test:43
+        - image: test:43
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -448,14 +397,9 @@ spec:
               port: 8080
             timeoutSeconds: 1
           volumeMounts:
-          - mountPath: /var/run/datadog
-            name: dsdsocket
           - mountPath: /tmp
             name: tmp
       volumes:
-        - hostPath:
-            path: /var/run/datadog
-          name: dsdsocket
         - emptyDir: {}
           name: tmp
 ---
@@ -471,8 +415,6 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: release-name
     helm.sh/chart: base-template-0.0.0
-    tags.datadoghq.com/service: release-name
-    tags.datadoghq.com/version: "42"
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -500,8 +442,6 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: release-name
     helm.sh/chart: base-template-0.0.0
-    tags.datadoghq.com/service: release-name-titi
-    tags.datadoghq.com/version: "43"
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

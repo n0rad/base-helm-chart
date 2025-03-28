@@ -38,8 +38,6 @@ tests:
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: RELEASE-NAME
             helm.sh/chart: base-template-0.0.0
-            tags.datadoghq.com/service: release-name
-            tags.datadoghq.com/version: "31"
             test_label: test
 
   - it: custom metadata with global metadata should pass
@@ -82,6 +80,4 @@ tests:
             app.kubernetes.io/name: RELEASE-NAME
             global_label: test
             helm.sh/chart: base-template-0.0.0
-            tags.datadoghq.com/service: release-name
-            tags.datadoghq.com/version: "31"
             test_label: test
