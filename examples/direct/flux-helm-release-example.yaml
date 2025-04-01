@@ -1,0 +1,17 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: hello-world
+  namespace: default
+spec:
+  interval: 60m
+  chart:
+    spec:
+
+  upgrade:
+    timeout: 30s
+    remediation:
+      retries: 3
+  rollback:
+    cleanupOnFail: true
+  values:
