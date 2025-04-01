@@ -4,8 +4,8 @@
   {{- $workload := .workload -}}
 
 
-{{- if eq $workload.type "CronJob" }}
-{{- /* A CronJob is not supposed to be part of a service nor scale up/down nor being rolled-out. */}}
+{{- if or (eq $workload.type "CronJob") (eq $workload.type "Job") }}
+{{- /* A Job/CronJob is not supposed to be part of a service nor scale up/down nor being rolled-out. */}}
 workloads:
   {{$workloadId}}:
     hpa:
