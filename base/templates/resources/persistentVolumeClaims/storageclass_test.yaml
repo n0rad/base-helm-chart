@@ -13,9 +13,8 @@ tests:
       path: kind
       value: PersistentVolumeClaim
     asserts:
-      - equal:
+      - isNull:
           path: spec.storageClassName
-          value: pd-ssd
 
   - it: custom should pass
     set:

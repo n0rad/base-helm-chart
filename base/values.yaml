@@ -279,7 +279,6 @@ chartDefaults:
       accessMode: ReadWriteOnce
       size: 1Gi
       retain: false
-      storageClass: pd-ssd
 
     networkPolicy:
       rules:

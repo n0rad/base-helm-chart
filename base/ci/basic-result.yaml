@@ -76,7 +76,6 @@ spec:
   resources:
     requests:
       storage: "1Gi"
-  storageClassName: "pd-ssd"
 ---
 # Source: base-template/templates/base.yaml
 kind: PersistentVolumeClaim
@@ -98,7 +97,6 @@ spec:
   resources:
     requests:
       storage: "1Gi"
-  storageClassName: "pd-ssd"
 ---
 # Source: base-template/templates/base.yaml
 apiVersion: v1
