@@ -1,7 +1,7 @@
 charts/
 Chart.lock
-values.schema.json
-values-default.schema.json
+
+values*.schema.json
 
 chart-template/
 

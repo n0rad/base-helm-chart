@@ -99,6 +99,8 @@ if [ ! -f "$CHART_PATH/schema/root.schema.json" ] && [ -n "$baseName" ]; then
 	cp "$scriptDir/lib/helm/values.schema.json" "$CHART_PATH"
 fi
 
+cp "$scriptDir/lib/helm/values-helmRelease.schema.json" "$CHART_PATH"
+
 if [ -f "$CHART_PATH/schema/root.schema.json" ]; then
 	echo_blue "Dereference schema and merge allOf"
 	if [ ! -d $scriptDir/lib/helm/dereferencer/node_modules ]; then
@@ -146,5 +148,5 @@ if [ "$PUSH" == true ]; then
 
 	tag="$name-$version"
 	gh release create "$tag" --generate-notes
-	gh release upload "$tag" "/tmp/$name-$version.tgz" $CHART_PATH/values.schema.json
+	gh release upload "$tag" "/tmp/$name-$version.tgz" $CHART_PATH/values*.schema.json
 fi
