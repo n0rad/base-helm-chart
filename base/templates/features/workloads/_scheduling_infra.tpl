@@ -5,32 +5,12 @@
 
 
 {{- if include "base.lib.utils.isEnabled" (dig "scheduling" dict $workload ) -}}
-{{- $nodepools := (list "common" "bursty" "volatile") }}
-{{- if not (has $workload.scheduling.nodepool $nodepools) }}
-  {{- fail (printf "workload scheduling must be one of %v(workload: %s)" $nodepools $workloadId) }}
-{{- end }}
 resources:
   controllers:
     {{$workloadId}}:
       pod:
-      {{- if or (eq $workload.scheduling.nodepool "volatile") (eq $workload.scheduling.nodepool "bursty") (include "base.lib.utils.isEnabled" $workload.scheduling.podSpreadingForHA) }}
+      {{- if include "base.lib.utils.isEnabled" $workload.scheduling.podSpreadingForHA }}
         affinity:
-          {{- if or (eq $workload.scheduling.nodepool "volatile") (eq $workload.scheduling.nodepool "bursty") }}
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-              - matchExpressions:
-                {{- if eq $workload.scheduling.nodepool "volatile" }}
-                - key: cloud.blabla.io/k8s-volatile
-                  operator: Exists
-                 {{- else if eq $workload.scheduling.nodepool "bursty" }}
-                - key: dedicated
-                  operator: In
-                  values:
-                  - bursty
-                 {{- end }}
-          {{- end }}
-
           {{- if include "base.lib.utils.isEnabled" $workload.scheduling.podSpreadingForHA }}
           podAntiAffinity:
             preferredDuringSchedulingIgnoredDuringExecution:
@@ -67,20 +47,6 @@ resources:
               app.kubernetes.io/component: {{ $workloadId }}
               {{- include "base.lib.metadata.selectorLabels" $rootContext | nindent 14 }}
       {{- end }}
-
-      {{- if or (eq $workload.scheduling.nodepool "volatile") (eq $workload.scheduling.nodepool "bursty") }}
-        tolerations:
-        - effect: NoSchedule
-          operator: Equal
-          {{- if eq $workload.scheduling.nodepool "volatile" }}
-          key: cloud.blabla.io/k8s-volatile
-          value: "true"
-          {{- else if eq $workload.scheduling.nodepool "bursty" }}
-          key: dedicated
-          value: "bursty"
-          {{- end }}
-      {{- end }}
-
 
 {{- end -}}
 {{- end }}

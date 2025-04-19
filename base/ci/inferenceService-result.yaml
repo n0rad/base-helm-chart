@@ -86,12 +86,6 @@ spec:
       runAsUser: 1000
     dnsPolicy: ClusterFirst
     affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-          - matchExpressions:
-            - key: cloud.blabla.io/k8s-volatile
-              operator: Exists
       podAntiAffinity:
         preferredDuringSchedulingIgnoredDuringExecution:
         - podAffinityTerm:
@@ -124,11 +118,6 @@ spec:
         maxSkew: 2
         topologyKey: kubernetes.io/hostname
         whenUnsatisfiable: DoNotSchedule
-    tolerations:
-      - effect: NoSchedule
-        key: cloud.blabla.io/k8s-volatile
-        operator: Equal
-        value: "true"
     volumes:
       - hostPath:
           path: /var/run/datadog
