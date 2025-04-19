@@ -303,6 +303,18 @@
           "$ref": "resources/requestAuthentications.json#/instance"
         }
       }
+    },
+    "persistentVolumes": {
+      "title": "Render some persistentVolumes, indexed by an identifier",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[0-9a-z-]*$": {
+          "title": "Identifier of the persistent volume",
+          "$ref": "resources/persistentVolumes.json#/instance"
+        }
+      }
     }
   }
 }

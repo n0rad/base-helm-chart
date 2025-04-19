@@ -275,6 +275,11 @@ chartDefaults:
     imageRepository:
       interval: 1m0s
 
+    persistentVolume:
+      accessModes:
+        - ReadWriteOnce
+      size: 1Gi
+
     persistentVolumeClaim:
       accessMode: ReadWriteOnce
       size: 1Gi

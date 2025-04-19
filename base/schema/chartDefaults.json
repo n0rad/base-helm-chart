@@ -67,6 +67,9 @@
         "persistentVolumeClaim": {
           "$ref": "resources/persistentVolumeClaims.json#/instance"
         },
+        "persistentVolume": {
+          "$ref": "resources/persistentVolumes.json#/instance"
+        },
         "networkPolicy": {
           "$ref": "resources/networkPolicies.json#/instance"
         },

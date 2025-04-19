@@ -55,6 +55,10 @@
     {{- include "base.lib.utils.mergeInValuesNonOverwrite" (dict "rootContext" $ "obj" (dict "resources" (dict "persistentVolumeClaims" (dict $identifier $.Values.chartDefaults.resources.persistentVolumeClaim)))) }}
   {{- end -}}
 
+  {{- range $identifier, $persistentVolume := .Values.resources.persistentVolumes -}}
+    {{- include "base.lib.utils.mergeInValuesNonOverwrite" (dict "rootContext" $ "obj" (dict "resources" (dict "persistentVolumes" (dict $identifier $.Values.chartDefaults.resources.persistentVolume)))) }}
+  {{- end -}}
+
   {{- range $identifier, $sidecar := .Values.resources.sidecars -}}
     {{- include "base.lib.utils.mergeInValuesNonOverwrite" (dict "rootContext" $ "obj" (dict "resources" (dict "sidecars" (dict $identifier $.Values.chartDefaults.resources.sidecar)))) }}
   {{- end -}}
