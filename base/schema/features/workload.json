@@ -78,6 +78,9 @@
     },
     "pdb": {
       "$ref": "../resources/podDisruptionBudgets.json#/WorkloadInstance"
+    },
+    "ingress": {
+      "$ref": "../resources/ingresses.json#/instance"
     }
   }
 }

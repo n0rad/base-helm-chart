@@ -22,6 +22,12 @@ resources:
       {{ $workload.pdb | toYaml | nindent 6 }}
   {{- end }}
 
+  {{- if include "base.lib.utils.isEnabled" (dig "ingress" dict $workload) }}
+  ingresses:
+    {{$workloadId}}:
+      {{ $workload.ingress | toYaml | nindent 6 }}
+  {{- end }}
+
   {{- if include "base.lib.utils.isEnabled" (dig "service" dict $workload) }}
   services:
     {{$workloadId}}:
