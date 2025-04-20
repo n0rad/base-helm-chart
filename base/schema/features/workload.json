@@ -20,7 +20,9 @@
       "$ref": "../resources/containers.json#/container"
     },
     "type": {
-      "$ref": "../lib/resource/controller.json#/typeDef"
+      "type": "string",
+      "enum": ["Deployment", "StatefulSet", "DaemonSet", "CronJob", "Job", "InferenceService", "singleton"],
+      "default": "Deployment"
     },
     "replicas": {
       "$ref": "../lib/resource/controller.json#/replicas"
