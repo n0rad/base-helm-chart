@@ -13,6 +13,7 @@
       {{/* `inferenceService` must be run before `resources` to disable HPA and Service*/}}
       {{- include "base.lib.utils.mergeOverwriteValues" (dict "rootContext" $rootContext "obj" (include "base.workloads.controllerInferenceService" (dict "rootContext" $rootContext "workloadId" $workloadId "workload" $workload) | fromYaml)) -}}
       {{- include "base.lib.utils.mergeOverwriteValues" (dict "rootContext" $rootContext "obj" (include "base.workloads.controllerCronJob" (dict "rootContext" $rootContext "workloadId" $workloadId "workload" $workload) | fromYaml)) -}}
+      {{- include "base.lib.utils.mergeOverwriteValues" (dict "rootContext" $rootContext "obj" (include "base.workloads.controllerSingleton" (dict "rootContext" $rootContext "workloadId" $workloadId "workload" $workload) | fromYaml)) -}}
       {{- include "base.lib.utils.mergeOverwriteValues" (dict "rootContext" $rootContext "obj" (include "base.workloads.resources" (dict "rootContext" $rootContext "workloadId" $workloadId "workload" $workload) | fromYaml)) -}}
       {{- include "base.lib.utils.mergeOverwriteValues" (dict "rootContext" $rootContext "obj" (include "base.workloads.hpa" (dict "rootContext" $rootContext "workloadId" $workloadId "workload" $workload) | fromYaml)) -}}
       {{- include "base.lib.utils.mergeOverwriteValues" (dict "rootContext" $rootContext "obj" (include "base.workloads.hpa.metrics.cpu" (dict "rootContext" $rootContext "workloadId" $workloadId "workload" $workload) | fromYaml)) -}}
