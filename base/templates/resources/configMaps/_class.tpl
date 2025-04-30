@@ -26,11 +26,14 @@ metadata:
   annotations: {{- toYaml . | nindent 4 -}}
   {{- end }}
 data:
-  {{- with $object.data }}
-    {{- if $object.noTemplating }}
-      {{- toYaml . | nindent 2 }}
-    {{- else }}
-      {{- tpl (toYaml .) $rootContext | nindent 2 }}
+  {{- range $k, $v := $object.data }}
+    {{- $res := dict $k $v }}
+    {{- if kindIs "map" $v }}
+      {{- $_ := set $res $k (toYaml (get $res $k)) }}
     {{- end }}
+    {{- if not $object.noTemplating }}
+      {{- $_ := set $res $k (tpl (get $res $k) $rootContext) }}
+    {{- end }}
+  {{- toYaml $res | nindent 2 }}
   {{- end }}
 {{- end -}}

@@ -28,6 +28,42 @@ tests:
             app.kubernetes.io/name: RELEASE-NAME
             helm.sh/chart: base-template-0.0.0
 
+  - it: data as object should pass
+    set:
+      resources.configMaps.config:
+            noTemplating: true
+            data:
+              test:
+                something: as object 
+                else: other
+    documentSelector:
+      path: kind
+      value: ConfigMap
+    asserts:
+      - equal:
+          path: data.test
+          value: |-
+            else: other
+            something: as object
+
+  - it: data as string should pass
+    set:
+      resources.configMaps.config:
+            noTemplating: true
+            data:
+              test: |
+                something: as object 
+                else: other
+    documentSelector:
+      path: kind
+      value: ConfigMap
+    asserts:
+      - equal:
+          path: data.test
+          value: |
+            something: as object
+            else: other
+
   - it: templating should pass
     set:
       resources.configMaps.config.data.test: '{{ .Release.Name }}'
