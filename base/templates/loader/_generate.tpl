@@ -54,4 +54,5 @@ Secondary entrypoint and primary loader for the common chart
   {{- include "base.lib.resource.renderResources" (dict "rootContext" $ "class" "datadogMetrics") | nindent 0 -}}
   {{- include "base.lib.resource.renderResources" (dict "rootContext" $ "class" "requestAuthentications") | nindent 0 -}}
   {{- include "base.lib.resource.renderResources" (dict "rootContext" $ "class" "persistentVolumes") | nindent 0 -}}
+  {{- include "base.lib.resource.renderResources" (dict "rootContext" $ "class" "dummies") | nindent 0 -}}
 {{- end -}}
