@@ -4,10 +4,8 @@
 
 {{- with $rootContext.Values.debug }}
 resources:
-  configMaps:
+  dummies:
     debug-{{ $chartName }}:
-      enabled: true
-      noTemplating: true
       data:
         values: |
           {{ $rootContext.Values | toYaml | nindent 8 }}

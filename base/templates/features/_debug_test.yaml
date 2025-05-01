@@ -4,7 +4,7 @@ templates:
 values:
   - ../../tests/overallValues.yaml
 tests:
-  - it: debug create configmap
+  - it: debug create dummy
     set:
       debug: true
     documentSelector:
@@ -12,6 +12,6 @@ tests:
       value: RELEASE-NAME-debug-base
     asserts:
       - isKind:
-          of: ConfigMap
+          of: Dummy
       - exists:
           path: data.values
