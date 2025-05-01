@@ -193,12 +193,6 @@ spec:
         runAsNonRoot: true
       dnsPolicy: ClusterFirst
       affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: cloud.blabla.io/k8s-volatile
-                operator: Exists
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
           - podAffinityTerm:
@@ -231,11 +225,6 @@ spec:
           maxSkew: 2
           topologyKey: kubernetes.io/hostname
           whenUnsatisfiable: DoNotSchedule
-      tolerations:
-        - effect: NoSchedule
-          key: cloud.blabla.io/k8s-volatile
-          operator: Equal
-          value: "true"
       containers:
         - image: test:43
           imagePullPolicy: IfNotPresent
@@ -319,12 +308,6 @@ spec:
         runAsNonRoot: true
       dnsPolicy: ClusterFirst
       affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: cloud.blabla.io/k8s-volatile
-                operator: Exists
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
           - podAffinityTerm:
@@ -357,11 +340,6 @@ spec:
           maxSkew: 2
           topologyKey: kubernetes.io/hostname
           whenUnsatisfiable: DoNotSchedule
-      tolerations:
-        - effect: NoSchedule
-          key: cloud.blabla.io/k8s-volatile
-          operator: Equal
-          value: "true"
       containers:
         - image: there:42
           imagePullPolicy: IfNotPresent

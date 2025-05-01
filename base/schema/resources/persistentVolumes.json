@@ -38,8 +38,26 @@
       },
       "csi": {
         "type": "object",
-        "additionalProperties": {
-          "type": "string"
+        "additionalProperties": false,
+        "properties": {
+          "driver": {
+            "type": "string"
+          },
+          "fsType": {
+            "type": "string"
+          },
+          "readOnly": {
+            "type": "boolean"
+          },
+          "volumeHandle": {
+            "type": "string"
+          },
+          "volumeAttributes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }   
+          }
         }
       }
     }

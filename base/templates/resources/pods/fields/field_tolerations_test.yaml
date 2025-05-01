@@ -11,13 +11,8 @@ tests:
       path: kind
       value: Deployment
     asserts:
-      - equal:
+      - isNull:
           path: spec.template.spec.tolerations
-          value:
-            - effect: NoSchedule
-              key: cloud.blabla.io/k8s-volatile
-              operator: Equal
-              value: "true"
 
   - it: resourcesDefault should pass
     set:

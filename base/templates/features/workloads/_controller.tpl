@@ -3,7 +3,12 @@
   {{- $workloadId := .workloadId -}}
   {{- $workload := .workload -}}
 
-{{- $controller := dict "type" $workload.type -}}
+{{- $controller := dict -}}
+{{- if eq $workload.type "singleton" -}}
+  {{- $_ := set $controller "type" "Deployment" -}}
+{{- else -}}
+  {{- $_ := set $controller "type" $workload.type -}}
+{{- end -}}
 {{- with $workload.pod -}}
   {{- $_ := set $controller "pod" $workload.pod -}}
 {{- end -}}

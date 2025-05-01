@@ -245,7 +245,7 @@ tests:
       value: RELEASE-NAME-debug-base
     asserts:
       - isKind:
-          of: ConfigMap
+          of: Dummy
       - exists:
           path: data.workloads.main.istio.dependencies['istio-system/metadata.google.internal']
       - equal:
