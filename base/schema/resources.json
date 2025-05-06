@@ -315,6 +315,18 @@
           "$ref": "resources/persistentVolumes.json#/instance"
         }
       }
+    },
+    "secrets": {
+      "title": "Render some secrets, indexed by an identifier",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[0-9a-z-]*$": {
+          "title": "Identifier of the secret",
+          "$ref": "resources/secrets.json#/instance"
+        }
+      }
     }
   }
 }
