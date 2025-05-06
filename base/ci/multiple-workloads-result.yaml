@@ -75,6 +75,7 @@ kind: Secret
 type: kubernetes.io/service-account-token
 metadata:
   name: release-name-titi-sa-token
+  namespace: default
   labels:
     app: release-name
     app.kubernetes.io/component: titi
@@ -91,6 +92,7 @@ kind: Secret
 type: kubernetes.io/service-account-token
 metadata:
   name: release-name-toto-sa-token
+  namespace: default
   labels:
     app: release-name
     app.kubernetes.io/component: toto
