@@ -44,7 +44,6 @@ kind: Secret
 type: kubernetes.io/service-account-token
 metadata:
   name: release-name-sa-token
-  namespace: default
   labels:
     app: release-name
     app.kubernetes.io/component: main

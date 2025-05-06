@@ -27,7 +27,6 @@ type: {{ . }}
 {{- end }}
 metadata:
   name: {{ $object.name }}
-  namespace: {{ default $rootContext.Release.Namespace $object.namespace }}
   {{- with $labels }}
   labels: {{- toYaml . | nindent 4 -}}
   {{- end }}

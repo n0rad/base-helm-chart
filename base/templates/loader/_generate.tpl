@@ -36,7 +36,6 @@ Secondary entrypoint and primary loader for the common chart
   {{- include "base.lib.resource.renderResources" (dict "rootContext" $ "class" "routes") | nindent 0 -}}
   {{- include "base.lib.resource.renderResources" (dict "rootContext" $ "class" "configMaps") | nindent 0 -}}
   {{- include "base.lib.resource.renderResources" (dict "rootContext" $ "class" "sealedSecrets") | nindent 0 -}}
-  {{- include "base.lib.resource.renderResources" (dict "rootContext" $ "class" "secrets") | nindent 0 -}}
   {{- include "base.lib.resource.renderResources" (dict "rootContext" $ "class" "networkPolicies") | nindent 0 -}}
   {{- include "base.lib.resource.renderResources" (dict "rootContext" $ "class" "podDisruptionBudgets") | nindent 0 -}}
   {{- include "base.lib.resource.renderResources" (dict "rootContext" $ "class" "horizontalPodAutoscalers") | nindent 0 -}}

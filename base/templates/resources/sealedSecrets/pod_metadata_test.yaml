@@ -17,6 +17,6 @@ tests:
       value: Deployment
     asserts:
       - equal:
-          path: spec.template.metadata.annotations.checksum/sealedSecrets
+          path: spec.template.metadata.annotations.checksum/secrets
           value:
             afdf20f511621d5cb358c5e8b0da2d14cdbe2549fb12fa123f6a6e9baabef26e

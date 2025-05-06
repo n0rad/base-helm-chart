@@ -30,23 +30,9 @@ Returns the value for annotations
     -}}
   {{- end -}}
 
-  {{- /* Add SealedSecrets checksum */ -}}
-  {{- $sealedSecretsFound := dict -}}
-  {{- range $name, $secret := $rootContext.Values.resources.sealedSecrets -}}
-    {{- if include "base.lib.utils.isEnabled" $secret -}}
-      {{- $_ := set $sealedSecretsFound $name (toYaml $secret.encryptedData | sha256sum) -}}
-    {{- end -}}
-  {{- end -}}
-  {{- if $sealedSecretsFound -}}
-    {{- $annotations = merge
-      (dict "checksum/sealedSecrets" (toYaml $sealedSecretsFound | sha256sum))
-      $annotations
-    -}}
-  {{- end -}}
-
-  {{- /* Add secrets checksum */ -}}
+  {{- /* Add Secrets checksum */ -}}
   {{- $secretsFound := dict -}}
-  {{- range $name, $secret := $rootContext.Values.resources.secrets -}}
+  {{- range $name, $secret := $rootContext.Values.resources.sealedSecrets -}}
     {{- if include "base.lib.utils.isEnabled" $secret -}}
       {{- $_ := set $secretsFound $name (toYaml $secret.encryptedData | sha256sum) -}}
     {{- end -}}
