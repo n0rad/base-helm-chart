@@ -22,6 +22,14 @@
           "enum": ["ReadWriteOnce", "ReadOnlyMany", "ReadWriteMany", "ReadWriteOncePod"]
         }
       },
+      "persistentVolumeReclaimPolicy": {
+        "type": "string",
+        "enum": [
+          "Recycle",
+          "Retain",
+          "Delete"
+        ]
+      },
       "nodeAffinity": {
         "additionalProperties": false,
         "properties": {
